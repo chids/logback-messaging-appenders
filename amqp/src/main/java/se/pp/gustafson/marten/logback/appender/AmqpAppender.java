@@ -41,9 +41,9 @@ public final class AmqpAppender extends AppenderBase<ILoggingEvent>
             e.printStackTrace();
         }
         super.start();
-        System.err.println(getClass().getSimpleName() + " configured: " + toString());
+        //System.err.println(getClass().getSimpleName() + " configured: " + toString());
     }
-    
+
     @Override
     public String toString()
     {
@@ -70,18 +70,14 @@ public final class AmqpAppender extends AppenderBase<ILoggingEvent>
         {
             this.channel.close();
         }
-        catch(final IOException e)
-        {
-            e.printStackTrace();
-        }
+        catch(final Exception ignored)
+        {}
         try
         {
             this.conn.close();
         }
-        catch(final IOException e)
-        {
-            e.printStackTrace();
-        }
+        catch(final Exception ignored)
+        {}
         super.stop();
     }
 

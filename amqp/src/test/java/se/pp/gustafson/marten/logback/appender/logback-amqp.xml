@@ -1,5 +1,4 @@
 <configuration>
-
 	<appender name="AMQP" class="se.pp.gustafson.marten.logback.appender.AmqpAppender">
 		<layout class="ch.qos.logback.classic.PatternLayout">
 			<Pattern>%msg</Pattern>
@@ -9,8 +8,9 @@
 		<username>guest</username>
 		<password>guest</password>
 		<virtualHost>/</virtualHost>
-		<exchange>yo</exchange>
+		<exchange>exchange</exchange>
 		<key>key</key>
+		<test/>
 	</appender>
 
 	<root level="ALL">
