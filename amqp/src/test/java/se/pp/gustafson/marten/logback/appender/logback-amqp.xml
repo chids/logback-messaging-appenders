@@ -1,0 +1,19 @@
+<configuration>
+
+	<appender name="AMQP" class="se.pp.gustafson.marten.logback.appender.AmqpAppender">
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<Pattern>%msg</Pattern>
+		</layout>
+		<host>127.0.0.1</host>
+		<port>5672</port>
+		<username>guest</username>
+		<password>guest</password>
+		<virtualHost>/</virtualHost>
+		<exchange>yo</exchange>
+		<key>key</key>
+	</appender>
+
+	<root level="ALL">
+		<appender-ref ref="AMQP" />
+	</root>
+</configuration>
