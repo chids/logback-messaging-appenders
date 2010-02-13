@@ -41,7 +41,7 @@ public class AmqpAppenderTest
     private static final String PASSWORD = "guest";
     private static final String HOST = "127.0.0.1";
     private static final int PORT = 5672;
-    
+
     private String message;
     private Connection conn;
     private Channel channel;
@@ -51,7 +51,8 @@ public class AmqpAppenderTest
     @Test
     public void configuredWithFile()
     {
-        final URL url = getClass().getClassLoader().getResource(getClass().getPackage().getName().replace('.', File.separatorChar) + File.separatorChar + "logback-amqp.xml");
+        final URL url = getClass().getClassLoader().getResource(
+                getClass().getPackage().getName().replace('.', File.separatorChar) + File.separatorChar + "logback-amqp.xml");
         try
         {
             final JoranConfigurator configurator = new JoranConfigurator();
@@ -69,7 +70,22 @@ public class AmqpAppenderTest
     }
 
     @Test
+    public void testUseLevelAsKey() throws IOException
+    {
+        this.channel.queueUnbind(QUEUE, EXCHANGE, KEY);
+        this.channel.queueBind(QUEUE, EXCHANGE, "ERROR");
+        final LoggerContext lc = createAppenderWithInlineConfiguration(true);
+        lc.getLogger(getClass()).error(this.message);
+    }
+    
+    @Test
     public void inlineConfiguration() throws Exception
+    {
+        final LoggerContext lc = createAppenderWithInlineConfiguration(false);
+        lc.getLogger(getClass()).error(this.message);
+    }
+
+    private LoggerContext createAppenderWithInlineConfiguration(final boolean useLevelAsKey)
     {
         final AmqpAppender appender = new AmqpAppender();
         final LoggerContext lc = (LoggerContext)LoggerFactory.getILoggerFactory();
@@ -77,29 +93,22 @@ public class AmqpAppenderTest
         final PatternLayout layout = new PatternLayout();
         layout.setPattern("%msg");
         layout.setContext(lc);
-        try
-        {
-            layout.start();
-            appender.setHost(HOST);
-            appender.setPort(PORT);
-            appender.setUsername(USER);
-            appender.setPassword(PASSWORD);
-            appender.setVirtualHost(VIRTUAL_HOST);
-            appender.setExchange(EXCHANGE);
-            appender.setKey(KEY);
-            appender.setLayout(layout);
-            appender.start();
-            appender.setContext(lc);
-            final Logger root = lc.getLogger(Logger.ROOT_LOGGER_NAME);
-            root.setLevel(Level.ALL);
-            root.addAppender(appender);
-            lc.getLogger(getClass()).error(this.message);
-        }
-        finally
-        {
-            appender.stop();
-            layout.stop();
-        }
+        layout.start();
+        appender.setHost(HOST);
+        appender.setPort(PORT);
+        appender.setUsername(USER);
+        appender.setPassword(PASSWORD);
+        appender.setVirtualHost(VIRTUAL_HOST);
+        appender.setExchange(EXCHANGE);
+        appender.setKey(KEY);
+        appender.setUseLevelAsKey(useLevelAsKey);
+        appender.setLayout(layout);
+        appender.start();
+        appender.setContext(lc);
+        final Logger root = lc.getLogger(Logger.ROOT_LOGGER_NAME);
+        root.setLevel(Level.ALL);
+        root.addAppender(appender);
+        return lc;
     }
 
     @Before
@@ -137,11 +146,14 @@ public class AmqpAppenderTest
     {
         try
         {
-            latch.await(200, TimeUnit.MILLISECONDS);
+            if(!latch.await(200, TimeUnit.MILLISECONDS))
+            {
+                fail("Timed out waiting for message");
+            }
         }
         catch(final InterruptedException e)
         {
-            fail("Timed out waiting for message");
+            fail("Interrupted while waiting for message");
         }
         this.channel.close();
         this.conn.close();

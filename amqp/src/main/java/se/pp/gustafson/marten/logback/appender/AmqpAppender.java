@@ -22,6 +22,12 @@ public final class AmqpAppender extends AppenderBase<ILoggingEvent>
     private String key;
     private Connection conn;
     private Channel channel;
+    private boolean useLevelAsKey;
+
+    public void setUseLevelAsKey(final boolean useLevelAsKey)
+    {
+        this.useLevelAsKey = useLevelAsKey;
+    }
 
     public void start()
     {
@@ -88,7 +94,8 @@ public final class AmqpAppender extends AppenderBase<ILoggingEvent>
             //FIXME: Support configuration for properties;
             //final BasicProperties props = new AMQP.BasicProperties();
             final byte[] payload = super.getLayout().doLayout(event).getBytes();
-            this.channel.basicPublish(this.exchange, this.key, null, payload);
+            final String key = (this.useLevelAsKey) ? event.getLevel().toString() : this.key;
+            this.channel.basicPublish(this.exchange, key, null, payload);
         }
         catch(final IOException e)
         {

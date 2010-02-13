@@ -10,7 +10,6 @@
 		<virtualHost>/</virtualHost>
 		<exchange>exchange</exchange>
 		<key>key</key>
-		<test/>
 	</appender>
 
 	<root level="ALL">
