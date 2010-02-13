@@ -1,7 +1,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>se.pp.gustafson.marten.logback.appender</groupId>
-	<artifactId>logback-messaging-appenders-parent</artifactId>
+	<artifactId>logback-messaging-appender-parent</artifactId>
 	<name>Logback Messaging Appenders parent POM</name>
 	<version>0.0.1-SNAPSHOT</version>
 	<description>Appenders for logging using messaging (for the Java logging framework Logback)</description>
@@ -38,8 +38,8 @@
 		</dependency>
 	</dependencies>
 	<properties>
-		<maven.compile.source>1.5</maven.compile.source>
-		<maven.compile.target>1.5</maven.compile.target>
+		<maven.compile.source>1.6</maven.compile.source>
+		<maven.compile.target>1.6</maven.compile.target>
 	</properties>
 	<inceptionYear>2010</inceptionYear>
 	<developers>

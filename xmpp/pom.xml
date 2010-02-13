@@ -1,11 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0">
 	<parent>
-		<artifactId>logback-messaging-appenders-parent</artifactId>
+		<artifactId>logback-messaging-appender-parent</artifactId>
 		<groupId>se.pp.gustafson.marten.logback.appender</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>se.pp.gustafson.marten.logback.appenders</groupId>
+	<groupId>se.pp.gustafson.marten.logback.appender</groupId>
 	<artifactId>logback-xmpp-appender</artifactId>
 	<name>XMPP Appender for Logback</name>
 	<version>0.0.1-SNAPSHOT</version>

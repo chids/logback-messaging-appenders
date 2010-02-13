@@ -9,8 +9,6 @@ import org.apache.vysper.storage.inmemory.MemoryStorageProviderRegistry;
 import org.apache.vysper.xmpp.authorization.AccountManagement;
 import org.apache.vysper.xmpp.modules.extension.xep0045_muc.MUCModule;
 import org.apache.vysper.xmpp.server.XMPPServer;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.LoggerFactory;
 
