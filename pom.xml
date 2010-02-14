@@ -15,14 +15,6 @@
 			<scope>compile</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-api</artifactId>
-			<version>1.5.10</version>
-			<type>jar</type>
-			<scope>compile</scope>
-		</dependency>
-		<!--  Test dep's -->
-		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<version>4.7</version>
@@ -34,8 +26,8 @@
 			<artifactId>logback-classic</artifactId>
 			<version>0.9.18</version>
 			<type>jar</type>
-			<scope>test</scope>
 		</dependency>
+		<!--  Test dep's -->
 	</dependencies>
 	<properties>
 		<maven.compile.source>1.6</maven.compile.source>
