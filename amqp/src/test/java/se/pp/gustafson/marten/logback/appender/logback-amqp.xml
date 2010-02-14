@@ -10,6 +10,12 @@
 		<virtualHost>/</virtualHost>
 		<exchange>exchange</exchange>
 		<key>key</key>
+		<useLevelAsKey>false</useLevelAsKey>
+		<useLevelAsPriority>false</useLevelAsPriority>
+		<deliveryMode/>
+		<encoding/>
+		<contentType/>
+		<persitent>false</persitent>
 	</appender>
 
 	<root level="ALL">
