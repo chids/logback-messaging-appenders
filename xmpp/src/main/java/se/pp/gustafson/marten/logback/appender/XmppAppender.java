@@ -1,5 +1,7 @@
 package se.pp.gustafson.marten.logback.appender;
 
+import java.util.concurrent.CountDownLatch;
+
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.PacketListener;
 import org.jivesoftware.smack.XMPPConnection;
@@ -24,32 +26,31 @@ public final class XmppAppender extends AppenderBase<ILoggingEvent>
     private MultiUserChat muc;
     private String botName;
     private String chatName;
-    private String trustStore;
-    private String trustStorePassword;
+    private final CountDownLatch latch = new CountDownLatch(1);
 
     @Override
     public void start()
     {
         try
         {
-            final ConnectionConfiguration config = new ConnectionConfiguration(this.server, this.port);
-            // FIXME: ...
+            final ConnectionConfiguration config = new ConnectionConfiguration(server, port);
 
             // Vyper
             config.setCompressionEnabled(false);
             config.setSecurityMode(ConnectionConfiguration.SecurityMode.required);
             config.setSASLAuthenticationEnabled(true);
             config.setDebuggerEnabled(false);
-            //config.setTruststorePath(this.trustStore);
-            //config.setTruststorePassword(this.trustStorePassword);
 
-            this.connection = new XMPPConnection(config);
-            this.connection.connect();
-            System.err.printf("Trying login with %s %s %s", this.user, this.password, this.resource);
-            this.connection.login(this.user, this.password, this.resource);
-            //doChat();
+            connection = new XMPPConnection(config);
+            connection.connect();
+            connection.login(user, password, resource);
+            System.err.println("Init chat");
+            doChat();
+            System.err.println("Chat initialized");
+            latch.await();
+            System.err.println("Chat thread terminated");
         }
-        catch(final XMPPException e)
+        catch(final Exception e)
         {
             e.printStackTrace();
             return;
@@ -63,25 +64,20 @@ public final class XmppAppender extends AppenderBase<ILoggingEvent>
         this.muc.join(this.botName);
         this.connection.addPacketListener(new PacketListener()
         {
-
             @Override
             public void processPacket(final Packet packet)
             {
-                if(packet instanceof Message)
+                final Message message = (Message)packet;
+                // FIXME: Implement command handling    
+                if("?".equals(message.getBody().trim()))
                 {
-                    final Message message = (Message)packet;
-                    // FIXME: Implement command handling    
-                    if("?".equals(message.getBody().trim()))
-                    {
-                        final Message reply = new Message(message.getFrom());
-                        reply.setBody("Currently no help is available");
-                        connection.sendPacket(reply);
-                    }
+                    final Message reply = new Message(message.getFrom());
+                    reply.setBody("Currently no help is available");
+                    connection.sendPacket(reply);
                 }
             }
         }, new PacketFilter()
         {
-
             @Override
             public boolean accept(final Packet packet)
             {
@@ -99,24 +95,26 @@ public final class XmppAppender extends AppenderBase<ILoggingEvent>
                 return false;
             }
         });
-        /*
-                    this.muc.addParticipantListener(new PacketListener()
-                    {
-                        @Override
-                        public void processPacket(final Packet message)
-                        {
-                        System.err.println("Participant: " + message.toXML());
-                        final Message welcome = new Message(message.getFrom());
-                        welcome.setBody("Welcome! Status is....");
-                        conn.sendPacket(welcome);
-                        }
-                    });
-                     */
+        try
+        {
+            int i = 0;
+            while(true)
+            {
+                this.muc.sendMessage("Ping " + i++);
+                System.err.println("Ping " + i + " sent");
+                Thread.sleep(500);
+            }
+        }
+        catch(InterruptedException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void stop()
     {
+        latch.countDown();
         try
         {
             if(this.muc == null)
@@ -146,10 +144,9 @@ public final class XmppAppender extends AppenderBase<ILoggingEvent>
     @Override
     protected void append(final ILoggingEvent event)
     {
-        // FIXME: Implement configurable flood protection / buffer / aggregation / ...
         try
         {
-            final Message m = new Message("user2@127.0.0.1");
+            final Message m = new Message("user@127.0.0.1");
             m.setBody("yeah");
             this.connection.sendPacket(m);
             this.muc.sendMessage(super.getLayout().doLayout(event));
@@ -195,15 +192,4 @@ public final class XmppAppender extends AppenderBase<ILoggingEvent>
     {
         this.chatName = chatName;
     }
-
-    public void setTrustStore(String trustStore)
-    {
-        this.trustStore = trustStore;
-    }
-
-    public void setTrustStorePassword(String trustStorePassword)
-    {
-        this.trustStorePassword = trustStorePassword;
-    }
-
 }
