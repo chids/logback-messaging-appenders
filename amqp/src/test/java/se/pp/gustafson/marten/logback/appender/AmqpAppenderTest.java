@@ -21,8 +21,7 @@ public class AmqpAppenderTest extends AbstractAmqpAppenderTest
     @Test
     public void configuredWithFile()
     {
-        final URL url = getClass().getClassLoader().getResource(
-                getClass().getPackage().getName().replace('.', File.separatorChar) + File.separatorChar + "logback-amqp.xml");
+        final URL url = getClass().getClassLoader().getResource("logback-amqp.xml");
         try
         {
             final JoranConfigurator configurator = new JoranConfigurator();
