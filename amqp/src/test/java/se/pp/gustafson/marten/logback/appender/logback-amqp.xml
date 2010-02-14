@@ -10,11 +10,12 @@
 		<virtualHost>/</virtualHost>
 		<exchange>exchange</exchange>
 		<key>key</key>
+		<!-- key will be the uppercase string represenation of level (INFO, DEBUG, WARN, ERROR) -->
 		<useLevelAsKey>false</useLevelAsKey>
+		<!-- Priority is mapped as: INFO = 1, DEBUG = 3, WARN = 7, ERROR = 9 -->
 		<useLevelAsPriority>false</useLevelAsPriority>
-		<deliveryMode/>
-		<encoding/>
-		<contentType/>
+		<encoding />
+		<contentType />
 		<persitent>false</persitent>
 	</appender>
 

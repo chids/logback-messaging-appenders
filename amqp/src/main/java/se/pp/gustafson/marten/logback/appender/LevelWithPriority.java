@@ -1,6 +1,3 @@
-/**
- * 
- */
 package se.pp.gustafson.marten.logback.appender;
 
 import ch.qos.logback.classic.Level;
