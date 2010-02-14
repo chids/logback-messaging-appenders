@@ -2,13 +2,13 @@
   <parent>
     <artifactId>logback-messaging-appender-parent</artifactId>
     <groupId>se.pp.gustafson.marten.logback.appender</groupId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <groupId>se.pp.gustafson.marten.logback.appender</groupId>
   <artifactId>logback-amqp-appender</artifactId>
   <name>AMQP Appender for Logback</name>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0</version>
   <dependencies>
   	<dependency>
   		<groupId>com.rabbitmq</groupId>

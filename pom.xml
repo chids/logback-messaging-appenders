@@ -3,7 +3,7 @@
 	<groupId>se.pp.gustafson.marten.logback.appender</groupId>
 	<artifactId>logback-messaging-appender-parent</artifactId>
 	<name>Logback Messaging Appenders parent POM</name>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0</version>
 	<description>Appenders for logging using messaging (for the Java logging framework Logback)</description>
 	<packaging>pom</packaging>
 	<dependencies>
