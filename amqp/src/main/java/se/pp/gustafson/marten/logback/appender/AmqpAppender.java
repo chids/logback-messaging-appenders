@@ -180,7 +180,7 @@ public final class AmqpAppender extends AppenderBase<ILoggingEvent>
 
     public void setPersistent(boolean persistent)
     {
-        this.deliveryMode = (persistent) ? 1 : 2;
+        this.deliveryMode = (persistent) ? 2 : 1;
     }
 
     @Override
