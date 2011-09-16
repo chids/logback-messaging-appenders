@@ -66,7 +66,7 @@ public abstract class AbstractAmqpAppenderTest
         appender.setKey(KEY);
         appender.setUseLevelAsKey(false);
         appender.setUseLevelAsPriority(false);
-        appender.setLayout(layout);
+        //appender.setLayout(layout);
         appender.start();
         appender.setContext(this.context);
         return appender;
@@ -94,7 +94,7 @@ public abstract class AbstractAmqpAppenderTest
         params.setRequestedHeartbeat(0);
         final ConnectionFactory factory = new ConnectionFactory(params);
         this.conn = factory.newConnection(HOST, PORT);
-        this.channel = conn.createChannel();
+        this.channel = this.conn.createChannel();
         this.channel.exchangeDeclare(EXCHANGE, "direct", false);
         this.channel.queueDelete(QUEUE);
         this.channel.queueDeclare(QUEUE, false);
@@ -105,13 +105,13 @@ public abstract class AbstractAmqpAppenderTest
             public void handleDelivery(final String consumerTag, final Envelope envelope, final BasicProperties properties, final byte[] body)
                     throws IOException
             {
-                channel.basicAck(envelope.getDeliveryTag(), false);
-                assertEquals(message, new String(body));
-                if(perTestAssertion != null)
+                AbstractAmqpAppenderTest.this.channel.basicAck(envelope.getDeliveryTag(), false);
+                assertEquals(AbstractAmqpAppenderTest.this.message, new String(body));
+                if(AbstractAmqpAppenderTest.this.perTestAssertion != null)
                 {
-                    perTestAssertion.doAssert(envelope, properties, body);
+                    AbstractAmqpAppenderTest.this.perTestAssertion.doAssert(envelope, properties, body);
                 }
-                latch.countDown();
+                AbstractAmqpAppenderTest.this.latch.countDown();
             }
         });
     }
@@ -121,7 +121,7 @@ public abstract class AbstractAmqpAppenderTest
     {
         try
         {
-            if(!latch.await(3000, TimeUnit.MILLISECONDS))
+            if(!this.latch.await(3000, TimeUnit.MILLISECONDS))
             {
                 fail("Timed out waiting for message, check system err for indications of test failure");
             }

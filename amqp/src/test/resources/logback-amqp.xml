@@ -1,25 +1,25 @@
 <configuration>
-	<appender name="AMQP" class="se.pp.gustafson.marten.logback.appender.AmqpAppender">
-		<layout class="ch.qos.logback.classic.PatternLayout">
-			<Pattern>%msg</Pattern>
-		</layout>
-		<host>127.0.0.1</host>
-		<port>5672</port>
-		<username>guest</username>
-		<password>guest</password>
-		<virtualHost>/</virtualHost>
-		<exchange>exchange</exchange>
-		<key>key</key>
-		<!-- key will be the uppercase string represenation of level (INFO, DEBUG, WARN, ERROR) -->
-		<useLevelAsKey>false</useLevelAsKey>
-		<!-- Priority is mapped as: INFO = 1, DEBUG = 3, WARN = 7, ERROR = 9 -->
-		<useLevelAsPriority>false</useLevelAsPriority>
-		<encoding />
-		<contentType />
-		<persitent>false</persitent>
-	</appender>
+    <appender name="AMQP" class="se.pp.gustafson.marten.logback.appender.AmqpAppender">
+        <encoder>
+            <pattern>%msg</pattern>
+        </encoder>
+        <host>127.0.0.1</host>
+        <port>5672</port>
+        <username>guest</username>
+        <password>guest</password>
+        <virtualHost>/</virtualHost>
+        <exchange>exchange</exchange>
+        <key>key</key>
+        <!-- key will be the upper case string representation of level (INFO, DEBUG, WARN, ERROR) -->
+        <useLevelAsKey>false</useLevelAsKey>
+        <!-- Priority is mapped as: INFO = 1, DEBUG = 3, WARN = 7, ERROR = 9 -->
+        <useLevelAsPriority>false</useLevelAsPriority>
+        <encoding />
+        <contentType />
+        <persitent>false</persitent>
+    </appender>
 
-	<root level="ALL">
-		<appender-ref ref="AMQP" />
-	</root>
+    <root level="ALL">
+        <appender-ref ref="AMQP" />
+    </root>
 </configuration>

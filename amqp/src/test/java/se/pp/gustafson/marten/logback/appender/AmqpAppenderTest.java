@@ -48,7 +48,7 @@ public class AmqpAppenderTest extends AbstractAmqpAppenderTest
     }
 
     @Test
-    public void testUseLevelAsPriority() throws IOException
+    public void testUseLevelAsPriority()
     {
         setTestAssertion(new TestAssertion()
         {
@@ -63,7 +63,6 @@ public class AmqpAppenderTest extends AbstractAmqpAppenderTest
         createLogger(appender).warn(this.message);
     }
 
-    
     @Test
     public void inlineConfiguration() throws Exception
     {

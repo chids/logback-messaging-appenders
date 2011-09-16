@@ -1,12 +1,16 @@
 package se.pp.gustafson.marten.logback.appender;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.Date;
 import java.util.Map;
 
 import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.net.LoggingEventPreSerializationTransformer;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.AppenderBase;
+import ch.qos.logback.core.spi.PreSerializationTransformer;
 
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
@@ -31,6 +35,8 @@ public final class AmqpAppender extends AppenderBase<ILoggingEvent>
     private static final String defaultAppId = null;
     private static final String defaultClusterId = null;
 
+    private final PreSerializationTransformer<ILoggingEvent> pst = new LoggingEventPreSerializationTransformer();
+
     private Connection conn;
     private Channel channel;
     private String username;
@@ -46,6 +52,7 @@ public final class AmqpAppender extends AppenderBase<ILoggingEvent>
     private String encoding;
     private Integer deliveryMode;
 
+    @Override
     public void start()
     {
         initalizeProperties();
@@ -58,7 +65,7 @@ public final class AmqpAppender extends AppenderBase<ILoggingEvent>
             params.setRequestedHeartbeat(0);
             final ConnectionFactory factory = new ConnectionFactory(params);
             this.conn = factory.newConnection(this.host, this.port);
-            this.channel = conn.createChannel();
+            this.channel = this.conn.createChannel();
         }
         catch(final IOException e)
         {
@@ -75,6 +82,7 @@ public final class AmqpAppender extends AppenderBase<ILoggingEvent>
         this.deliveryMode = (this.deliveryMode == null) ? defaultDeliveryMode : this.deliveryMode;
     }
 
+    @Override
     public void stop()
     {
         try
@@ -92,12 +100,19 @@ public final class AmqpAppender extends AppenderBase<ILoggingEvent>
         super.stop();
     }
 
+    @Override
     protected void append(final ILoggingEvent event)
     {
         try
         {
             final Level level = event.getLevel();
-            final byte[] payload = super.getLayout().doLayout(event).getBytes();
+            //final byte[] payload = super.getLayout().doLayout(event).getBytes();
+            final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            final ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(this.pst.transform(event));
+            oos.close();
+            final byte[] payload = baos.toByteArray();
+            baos.close();
             final String key = (this.useLevelAsKey) ? level.toString() : this.key;
             this.channel.basicPublish(this.exchange, key, createProperties(event, level), payload);
         }
